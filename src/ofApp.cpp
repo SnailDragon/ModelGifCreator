@@ -6,7 +6,7 @@ void ofApp::setup(){
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetFrameRate(30);
 
-	string filePath = "C:\\Users\\tyler\\Desktop\\ASCENDSpring2024PayloadMockUp.obj";
+	string filePath = "Cheese.stl"; //"C:\\Users\\tyler\\Desktop\\ASCENDSpring2024PayloadMockUp.obj";
 	do {
 		/*std::cout << "Enter file path: " << endl;
 		std::cin >> filePath;*/
@@ -27,7 +27,9 @@ void ofApp::setup(){
 	model.setPosition(-offset.x, -offset.y, -offset.z);
 	
 	//model.setPosition(this->sceneWidth / 2.0, this->sceneHeight / 2.0, this->sceneDepth / 2.0);
-
+	rot = 0; 
+	camera.setGlobalPosition(glm::vec3(0, 300, 800));
+	camera.setOrientation(glm::vec3(-22.5, 0, 0));
 	ofLogNotice() << "setup done" << std::endl;
 }
 
@@ -42,15 +44,19 @@ void ofApp::update(){
 	//model.setPosition(0, -sceneHeight * 0.5, 0); model.getPosition() + 
 	light.setPosition(glm::vec3(-300, -500, 1200) * 3);
 	otherlight.setPosition(glm::vec3(300, 500, -1200) * 3);
+
+	// camera 
+	// 35.4864, 327.83, 577.612
+	model.setRotation(2, rot, 0, 0, 1);
+	rot++; 
 	model.update();
 
-	// rotate camera 
-	
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	cam.begin();
+	//cam.begin();
+	camera.begin();
 
 	ofSetColor(255);
 
@@ -73,7 +79,9 @@ void ofApp::draw(){
 	ofDisableLighting();
 	ofDisableSeparateSpecularLight();
 
-	cam.end();
+	camera.end();
+	//cout << cam.getPosition().x << ", " << cam.getPosition().y << ", " << cam.getPosition().z << endl;
+	//cam.end();
 	ofDisableDepthTest();
 }
 

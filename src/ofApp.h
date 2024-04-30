@@ -27,9 +27,11 @@ class ofApp : public ofBaseApp{
 		ofLight light;
 		ofLight otherlight;
 		ofEasyCam cam;
+		ofCamera camera;
 
 		double sceneHeight;
 		double sceneWidth;
 		double sceneDepth;
 		double modelScale;
+		double rot;
 };
