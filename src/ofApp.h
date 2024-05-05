@@ -21,6 +21,7 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+		void mouseScrolled(int x, int y, float scrollX, float scrollY);
 
 		ofxAssimpModelLoader model;
 		ofMesh mesh;
@@ -34,4 +35,5 @@ class ofApp : public ofBaseApp{
 		double sceneDepth;
 		double modelScale;
 		double rot;
+		double zoom;
 };

@@ -6,7 +6,7 @@ void ofApp::setup(){
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetFrameRate(30);
 
-	string filePath = "Cheese.stl"; //"C:\\Users\\tyler\\Desktop\\ASCENDSpring2024PayloadMockUp.obj";
+	string filePath = "C:\\Users\\tyler\\Desktop\\ASCENDSpring2024PayloadMockUp.obj";
 	do {
 		/*std::cout << "Enter file path: " << endl;
 		std::cin >> filePath;*/
@@ -19,36 +19,45 @@ void ofApp::setup(){
 	this->sceneHeight = (model.getSceneMaxModelSpace() - model.getSceneMinModelSpace()).y;
 	this->sceneWidth = (model.getSceneMaxModelSpace() - model.getSceneMinModelSpace()).x;
 	cout << this->sceneHeight << " " << ofGetHeight() << endl;
-	this->modelScale = fabs((ofGetHeight() / 2.0) / sceneHeight);
+	double maxScale = max(this->sceneDepth, max(this->sceneHeight, this->sceneWidth));
+
+	if (maxScale == this->sceneDepth) {
+		this->modelScale = fabs((ofGetWidth() / 1.5) / this->sceneDepth);
+	}
+	else if (maxScale == this->sceneWidth) {
+		this->modelScale = fabs((ofGetWidth() / 1.5) / this->sceneWidth);
+	}
+	else {
+		this->modelScale = fabs((ofGetHeight() / 1.5) / this->sceneHeight);
+	}
+
 	model.setScale(this->modelScale, this->modelScale, this->modelScale);
 	
 	glm::vec3 offset = (model.getSceneMaxModelSpace() + model.getSceneMinModelSpace()) / 2;
 	cout << offset.x << ", " << offset.y << ", " << offset.z << endl;
 	model.setPosition(-offset.x, -offset.y, -offset.z);
-	
-	//model.setPosition(this->sceneWidth / 2.0, this->sceneHeight / 2.0, this->sceneDepth / 2.0);
+
 	rot = 0; 
-	camera.setGlobalPosition(glm::vec3(0, 300, 800));
-	camera.setOrientation(glm::vec3(-22.5, 0, 0));
+	camera.setGlobalPosition(glm::vec3(800 * sin(rot), 300, 800 * cos(rot)));
+	camera.setOrientation(glm::vec3(0, rot, 0));
+	this->zoom = 1;
 	ofLogNotice() << "setup done" << std::endl;
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
 	
-	// set model orientation
-	
-	//model.setScale(1, -1, 1);
-	//model.setRotation(0, 180, 0, 1, 0); 
-
-	//model.setPosition(0, -sceneHeight * 0.5, 0); model.getPosition() + 
-	light.setPosition(glm::vec3(-300, -500, 1200) * 3);
 	otherlight.setPosition(glm::vec3(300, 500, -1200) * 3);
 
 	// camera 
-	// 35.4864, 327.83, 577.612
-	model.setRotation(2, rot, 0, 0, 1);
-	rot++; 
+	camera.setGlobalPosition(glm::vec3(800 * sin(rot), 300, 800 * cos(rot)) * this->zoom);
+	camera.setOrientation(glm::vec3(-22.5, rot * (180 / 3.1415), 0));
+
+	light.setPosition(glm::vec3(800 * sin(rot), 300, 800 * cos(rot)) * 3);
+
+
+	rot += 0.01;
+
 	model.update();
 
 }
@@ -61,13 +70,10 @@ void ofApp::draw(){
 	ofSetColor(255);
 
 	ofEnableDepthTest();
-	//ofDrawSphere(0, 0, 0, 50);
-	//ofDrawSphere(light.getPosition().x, light.getPosition().y, light.getPosition().z, 50);
-	//ofDrawSphere(otherlight.getPosition().x, otherlight.getPosition().y, otherlight.getPosition().z, 50);
 
 	ofEnableLighting(); 
 	light.enable();
-	otherlight.enable();
+	//otherlight.enable();
 	ofEnableSeparateSpecularLight(); 
 
 	ofPushMatrix();
@@ -75,7 +81,7 @@ void ofApp::draw(){
 	ofPopMatrix();
 
 	light.disable();
-	otherlight.disable();
+	//otherlight.disable();
 	ofDisableLighting();
 	ofDisableSeparateSpecularLight();
 
@@ -84,6 +90,12 @@ void ofApp::draw(){
 	//cam.end();
 	ofDisableDepthTest();
 }
+
+void ofApp::mouseScrolled(int x, int y, float scrollX, float scrollY) {
+	this->zoom += scrollY / 10.0;
+	this->zoom = max(this->zoom, 0.1);
+}
+
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
@@ -139,3 +151,4 @@ void ofApp::gotMessage(ofMessage msg){
 void ofApp::dragEvent(ofDragInfo dragInfo){ 
 
 }
+
