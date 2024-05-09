@@ -6,10 +6,10 @@ void ofApp::setup(){
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetFrameRate(30);
 
-	string filePath = "C:\\Users\\tyler\\Desktop\\ASCENDSpring2024PayloadMockUp.obj";
+	string filePath; //= "Lounge Chair.obj";//"Cheese.stl"; //"C:\\Users\\tyler\\Desktop\\ASCENDSpring2024PayloadMockUp.obj";
 	do {
-		/*std::cout << "Enter file path: " << endl;
-		std::cin >> filePath;*/
+		std::cout << "enter file path: ";
+		std::getline(std::cin, filePath);
 	}
 	while (!this->model.load(filePath, ofxAssimpModelLoader::OPTIMIZE_DEFAULT));
 
